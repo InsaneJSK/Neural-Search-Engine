@@ -216,3 +216,16 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+data/
+
+# Local credentials, model artifacts, and workflow runtime state
+.env.*
+!.env.dist
+!.env.example
+*.safetensors
+*.pt
+*.pth
+pytorch_model*.bin
+node_modules/
+.n8n/

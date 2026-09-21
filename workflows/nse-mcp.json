@@ -1,0 +1,95 @@
+{
+  "name": "NSE - MCP ranked evidence",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual",
+      "name": "Run demo",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "query",
+              "name": "query",
+              "value": "What is the difference between a bi-encoder and a cross-encoder?",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "query",
+      "name": "Demo query",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "serverTransport": "httpStreamable",
+        "endpointUrl": "http://127.0.0.1:8000/mcp",
+        "authentication": "none",
+        "tool": {
+          "__rl": true,
+          "value": "neural_search",
+          "mode": "id"
+        },
+        "inputMode": "json",
+        "jsonInput": "={{ JSON.stringify({query: $json.query, max_results: 20, rerank: 10, top: 5}) }}",
+        "options": {
+          "timeout": 180000
+        }
+      },
+      "id": "search",
+      "name": "Rank sources",
+      "type": "@n8n/n8n-nodes-langchain.mcpClient",
+      "typeVersion": 1.1,
+      "position": [
+        480,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Run demo": {
+      "main": [
+        [
+          {
+            "node": "Demo query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Demo query": {
+      "main": [
+        [
+          {
+            "node": "Rank sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "tags": [],
+  "id": "NSEMcpDemo0000001"
+}

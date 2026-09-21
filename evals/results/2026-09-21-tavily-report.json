@@ -1,0 +1,783 @@
+{
+  "at": "2026-09-20T22:06:20.422190+00:00",
+  "status": "complete",
+  "label_source": "local_llm_unvalidated",
+  "k": 5,
+  "provider": "tavily",
+  "requested_queries": 30,
+  "completed_queries": 30,
+  "empty_queries": 0,
+  "excluded_queries": [],
+  "aggregate": {
+    "provider": {
+      "ndcg": 0.8787965615497738,
+      "ndcg_queries": 30,
+      "precision": 0.96,
+      "mean_latency_ms": 3167.284
+    },
+    "bi_encoder": {
+      "ndcg": 0.7153420285178272,
+      "ndcg_queries": 30,
+      "precision": 0.82,
+      "mean_latency_ms": 6566.6033333333335
+    },
+    "cross_encoder": {
+      "ndcg": 0.8710549631454964,
+      "ndcg_queries": 30,
+      "precision": 0.96,
+      "mean_latency_ms": 8252.724
+    }
+  },
+  "per_query": [
+    {
+      "id": "q01",
+      "query": "what is semantic search",
+      "category": "definition",
+      "candidate_count": 19,
+      "timings_ms": {
+        "fetch_ms": 2977.32,
+        "bi_encoder_ms": 1432.89,
+        "cross_encoder_ms": 758.57
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        },
+        "cross_encoder": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q02",
+      "query": "how does a transformer use attention",
+      "category": "technical",
+      "candidate_count": 20,
+      "timings_ms": {
+        "fetch_ms": 1974.17,
+        "bi_encoder_ms": 2658.49,
+        "cross_encoder_ms": 1297.39
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 0.5302704544515309,
+          "precision": 0.6
+        },
+        "bi_encoder": {
+          "ndcg": 0.6454174924602563,
+          "precision": 0.6
+        },
+        "cross_encoder": {
+          "ndcg": 0.6950086224622003,
+          "precision": 0.8
+        }
+      }
+    },
+    {
+      "id": "q03",
+      "query": "difference between a bi encoder and a cross encoder",
+      "category": "comparison",
+      "candidate_count": 19,
+      "timings_ms": {
+        "fetch_ms": 4580.63,
+        "bi_encoder_ms": 1810.82,
+        "cross_encoder_ms": 930.76
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 0.8165832016561192,
+          "precision": 0.8
+        },
+        "bi_encoder": {
+          "ndcg": 0.8777221344374128,
+          "precision": 1.0
+        },
+        "cross_encoder": {
+          "ndcg": 0.9250256699929476,
+          "precision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q04",
+      "query": "what is a database transaction",
+      "category": "definition",
+      "candidate_count": 19,
+      "timings_ms": {
+        "fetch_ms": 2515.24,
+        "bi_encoder_ms": 1610.09,
+        "cross_encoder_ms": 778.45
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 0.8061941684150765,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 0.9030970842075382,
+          "precision": 1.0
+        },
+        "cross_encoder": {
+          "ndcg": 0.8061941684150765,
+          "precision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q05",
+      "query": "what is the greenhouse effect",
+      "category": "definition",
+      "candidate_count": 18,
+      "timings_ms": {
+        "fetch_ms": 2582.58,
+        "bi_encoder_ms": 3493.62,
+        "cross_encoder_ms": 2173.35
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        },
+        "cross_encoder": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q06",
+      "query": "what does an HTTP 404 status code mean",
+      "category": "definition",
+      "candidate_count": 19,
+      "timings_ms": {
+        "fetch_ms": 2572.39,
+        "bi_encoder_ms": 4580.01,
+        "cross_encoder_ms": 2241.52
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 0.9165323715184533,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 0.8061941684150765,
+          "precision": 1.0
+        },
+        "cross_encoder": {
+          "ndcg": 0.9030970842075382,
+          "precision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q07",
+      "query": "why does Python have a global interpreter lock",
+      "category": "technical",
+      "candidate_count": 17,
+      "timings_ms": {
+        "fetch_ms": 2657.14,
+        "bi_encoder_ms": 4015.21,
+        "cross_encoder_ms": 2231.0
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 0.9250256699929476,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 0.47455189204944886,
+          "precision": 0.6
+        },
+        "cross_encoder": {
+          "ndcg": 0.9165323715184533,
+          "precision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q08",
+      "query": "how does cosine similarity work for text embeddings",
+      "category": "technical",
+      "candidate_count": 19,
+      "timings_ms": {
+        "fetch_ms": 2696.42,
+        "bi_encoder_ms": 7558.21,
+        "cross_encoder_ms": 4771.56
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 0.8196294557259916,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 0.6191922895841276,
+          "precision": 0.6
+        },
+        "cross_encoder": {
+          "ndcg": 0.7906355891969594,
+          "precision": 0.8
+        }
+      }
+    },
+    {
+      "id": "q09",
+      "query": "how does DNS resolve a domain name",
+      "category": "technical",
+      "candidate_count": 19,
+      "timings_ms": {
+        "fetch_ms": 2595.0,
+        "bi_encoder_ms": 6720.18,
+        "cross_encoder_ms": 3304.93
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 0.8061941684150765,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 0.72272653993353,
+          "precision": 1.0
+        },
+        "cross_encoder": {
+          "ndcg": 0.8061941684150765,
+          "precision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q10",
+      "query": "why can neural networks overfit training data",
+      "category": "technical",
+      "candidate_count": 20,
+      "timings_ms": {
+        "fetch_ms": 6374.11,
+        "bi_encoder_ms": 5836.35,
+        "cross_encoder_ms": 2233.71
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 0.9030970842075382,
+          "precision": 1.0
+        },
+        "cross_encoder": {
+          "ndcg": 0.9165323715184533,
+          "precision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q11",
+      "query": "difference between TCP and UDP",
+      "category": "comparison",
+      "candidate_count": 16,
+      "timings_ms": {
+        "fetch_ms": 2704.92,
+        "bi_encoder_ms": 4035.82,
+        "cross_encoder_ms": 2326.09
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 0.9165323715184533,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        },
+        "cross_encoder": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q12",
+      "query": "precision versus recall in information retrieval",
+      "category": "comparison",
+      "candidate_count": 20,
+      "timings_ms": {
+        "fetch_ms": 3658.73,
+        "bi_encoder_ms": 5758.66,
+        "cross_encoder_ms": 1971.12
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 0.7942545059558663,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 0.23304241499414702,
+          "precision": 0.4
+        },
+        "cross_encoder": {
+          "ndcg": 0.9165323715184533,
+          "precision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q13",
+      "query": "difference between solar and lunar eclipses",
+      "category": "comparison",
+      "candidate_count": 15,
+      "timings_ms": {
+        "fetch_ms": 2469.74,
+        "bi_encoder_ms": 3585.68,
+        "cross_encoder_ms": 2380.46
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 0.9165323715184533,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 0.4174332844232195,
+          "precision": 0.6
+        },
+        "cross_encoder": {
+          "ndcg": 0.9165323715184533,
+          "precision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q14",
+      "query": "when to use a list versus a set in Python",
+      "category": "comparison",
+      "candidate_count": 18,
+      "timings_ms": {
+        "fetch_ms": 3097.17,
+        "bi_encoder_ms": 4054.27,
+        "cross_encoder_ms": 1009.89
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 0.785450975830099,
+          "precision": 0.8
+        },
+        "bi_encoder": {
+          "ndcg": 0.6333513308383866,
+          "precision": 0.6
+        },
+        "cross_encoder": {
+          "ndcg": 0.8804314282932715,
+          "precision": 0.8
+        }
+      }
+    },
+    {
+      "id": "q15",
+      "query": "how to undo the last git commit and keep the changes",
+      "category": "how_to",
+      "candidate_count": 20,
+      "timings_ms": {
+        "fetch_ms": 5117.21,
+        "bi_encoder_ms": 3492.09,
+        "cross_encoder_ms": 2047.97
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        },
+        "cross_encoder": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q16",
+      "query": "how to find duplicate rows in SQL",
+      "category": "how_to",
+      "candidate_count": 20,
+      "timings_ms": {
+        "fetch_ms": 2622.13,
+        "bi_encoder_ms": 5504.88,
+        "cross_encoder_ms": 2947.04
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 0.7446551257189392,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 0.9030970842075382,
+          "precision": 1.0
+        },
+        "cross_encoder": {
+          "ndcg": 0.9250256699929476,
+          "precision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q17",
+      "query": "how to propagate a pothos plant in water",
+      "category": "how_to",
+      "candidate_count": 17,
+      "timings_ms": {
+        "fetch_ms": 2515.31,
+        "bi_encoder_ms": 4269.69,
+        "cross_encoder_ms": 2350.65
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 0.7538726900073175,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 0.5169284732317916,
+          "precision": 0.8
+        },
+        "cross_encoder": {
+          "ndcg": 0.6582973776825884,
+          "precision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q18",
+      "query": "how to remove a coffee stain from a cotton shirt",
+      "category": "how_to",
+      "candidate_count": 18,
+      "timings_ms": {
+        "fetch_ms": 2556.34,
+        "bi_encoder_ms": 4134.03,
+        "cross_encoder_ms": 2756.81
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 0.72272653993353,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 0.23304241499414702,
+          "precision": 0.4
+        },
+        "cross_encoder": {
+          "ndcg": 0.6839163028524893,
+          "precision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q19",
+      "query": "python memory",
+      "category": "ambiguous",
+      "candidate_count": 19,
+      "timings_ms": {
+        "fetch_ms": 2589.31,
+        "bi_encoder_ms": 5637.81,
+        "cross_encoder_ms": 1865.18
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 0.830419897363192,
+          "precision": 0.8
+        },
+        "bi_encoder": {
+          "ndcg": 0.426100434153218,
+          "precision": 0.6
+        },
+        "cross_encoder": {
+          "ndcg": 0.830419897363192,
+          "precision": 0.8
+        }
+      }
+    },
+    {
+      "id": "q20",
+      "query": "jaguar speed",
+      "category": "ambiguous",
+      "candidate_count": 17,
+      "timings_ms": {
+        "fetch_ms": 2335.96,
+        "bi_encoder_ms": 3887.72,
+        "cross_encoder_ms": 1038.59
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 0.731219838408024,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 0.6399453854227659,
+          "precision": 0.6
+        },
+        "cross_encoder": {
+          "ndcg": 0.3492366380453807,
+          "precision": 0.6
+        }
+      }
+    },
+    {
+      "id": "q21",
+      "query": "java streams",
+      "category": "ambiguous",
+      "candidate_count": 20,
+      "timings_ms": {
+        "fetch_ms": 2610.0,
+        "bi_encoder_ms": 2839.71,
+        "cross_encoder_ms": 825.29
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 0.8061941684150765,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 0.5870133870600276,
+          "precision": 1.0
+        },
+        "cross_encoder": {
+          "ndcg": 0.8061941684150765,
+          "precision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q22",
+      "query": "mercury temperature",
+      "category": "ambiguous",
+      "candidate_count": 18,
+      "timings_ms": {
+        "fetch_ms": 2457.66,
+        "bi_encoder_ms": 1892.85,
+        "cross_encoder_ms": 1036.38
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        },
+        "cross_encoder": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q23",
+      "query": "what is semntic serch",
+      "category": "typo",
+      "candidate_count": 16,
+      "timings_ms": {
+        "fetch_ms": 4587.37,
+        "bi_encoder_ms": 1251.83,
+        "cross_encoder_ms": 864.87
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 0.7092912526226147,
+          "precision": 0.8
+        },
+        "cross_encoder": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q24",
+      "query": "how does photosyntesis work",
+      "category": "typo",
+      "candidate_count": 17,
+      "timings_ms": {
+        "fetch_ms": 3899.21,
+        "bi_encoder_ms": 1535.22,
+        "cross_encoder_ms": 950.87
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 0.8165832016561192,
+          "precision": 0.8
+        },
+        "bi_encoder": {
+          "ndcg": 0.6839163028524893,
+          "precision": 1.0
+        },
+        "cross_encoder": {
+          "ndcg": 0.9250256699929476,
+          "precision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q25",
+      "query": "diffrence between supervised and unsupervised lerning",
+      "category": "typo",
+      "candidate_count": 19,
+      "timings_ms": {
+        "fetch_ms": 4922.09,
+        "bi_encoder_ms": 1674.77,
+        "cross_encoder_ms": 1021.46
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        },
+        "cross_encoder": {
+          "ndcg": 0.9165323715184533,
+          "precision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q26",
+      "query": "how to creat a python virtual enviroment",
+      "category": "typo",
+      "candidate_count": 19,
+      "timings_ms": {
+        "fetch_ms": 3260.0,
+        "bi_encoder_ms": 2283.29,
+        "cross_encoder_ms": 926.42
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 0.7808192186449511,
+          "precision": 1.0
+        },
+        "cross_encoder": {
+          "ndcg": 0.72272653993353,
+          "precision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q27",
+      "query": "why is the sky blue",
+      "category": "factual",
+      "candidate_count": 17,
+      "timings_ms": {
+        "fetch_ms": 2371.28,
+        "bi_encoder_ms": 1439.09,
+        "cross_encoder_ms": 891.24
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 0.6343169226155623,
+          "precision": 0.8
+        },
+        "cross_encoder": {
+          "ndcg": 0.9250256699929476,
+          "precision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q28",
+      "query": "what causes ocean tides",
+      "category": "factual",
+      "candidate_count": 19,
+      "timings_ms": {
+        "fetch_ms": 3364.79,
+        "bi_encoder_ms": 1611.33,
+        "cross_encoder_ms": 893.58
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 0.5258744542787339,
+          "precision": 0.6
+        },
+        "cross_encoder": {
+          "ndcg": 0.9165323715184533,
+          "precision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q29",
+      "query": "who invented the World Wide Web",
+      "category": "factual",
+      "candidate_count": 18,
+      "timings_ms": {
+        "fetch_ms": 4213.72,
+        "bi_encoder_ms": 1803.9,
+        "cross_encoder_ms": 990.03
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        },
+        "cross_encoder": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q30",
+      "query": "why does salt melt ice",
+      "category": "factual",
+      "candidate_count": 19,
+      "timings_ms": {
+        "fetch_ms": 2140.58,
+        "bi_encoder_ms": 1571.07,
+        "cross_encoder_ms": 768.44
+      },
+      "methods": {
+        "provider": {
+          "ndcg": 0.9250256699929476,
+          "precision": 1.0
+        },
+        "bi_encoder": {
+          "ndcg": 0.5840898099002949,
+          "precision": 0.6
+        },
+        "cross_encoder": {
+          "ndcg": 1.0,
+          "precision": 1.0
+        }
+      }
+    }
+  ]
+}
