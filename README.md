@@ -1,34 +1,39 @@
 # Neural Search Engine
 
-**From custom model fine-tuning to an agent-callable search service: BERT retrieval and reranking, MCP, and n8n workflows.**
+**Custom-trained neural retrieval, an interactive search workspace, and an agent-callable service.**
 
 A query goes from live search to a bi-encoder shortlist and cross-encoder
 reranking. The service returns evidence with source IDs, URLs, relevance scores,
 and timings. An optional workflow passes that evidence to local Qwen for a cited
-answer. Both ranking models stay loaded between requests.
+answer. The web frontend shows sources first, then generates a cited answer using
+Groq with local Ollama fallback. Both ranking models stay loaded between requests.
 
 [Demo screenshots](docs/demo-gallery.md) · [Run locally](#run-locally) · [Workflow guide](docs/prototype.md) ·
 [Evaluation](evals/results/2026-09-21-tavily.md) ·
 [Training and technical reference](TECHNICAL_REFERENCE.md) ·
 [Validation record](docs/prototype-validation.md)
 
-![Successful n8n execution: query, trained ranking service, structured Ollama request, and validated answer with evidence](docs/assets/n8n-answer-workflow.png)
+![NSE frontend: search workspace with example questions and cited-answer controls](docs/assets/frontend-home.jpg)
 
-*An actual local execution of the six-node answer workflow. The trained BERT
-models run inside the NSE service called by **Rank sources**.*
+*The local web interface uses the same trained ranking pipeline as HTTP, MCP,
+and n8n clients. [Website setup and architecture](docs/frontend.md).*
 
 ## What is implemented
 
+- **Interactive frontend:** React/TypeScript search, cited answers, source links,
+  expandable excerpts, ranking details, real stage timings, and session history.
 - **Trained model inference:** BERT bi-encoder retrieval and cross-encoder reranking,
   with versioned Kaggle checkpoints and strict weight loading.
 - **Agent and workflow interfaces:** an MCP `neural_search` tool and HTTP search
   endpoint sharing one resident Python pipeline.
+- **Shared answer endpoint:** Groq-first generation with Ollama fallback, validated
+  citations, provider metadata, and preserved evidence when generation fails.
 - **Three n8n workflows:** HTTP retrieval, native MCP retrieval, and retrieval
   followed by local `qwen3:4b` answer generation with source citations.
 - **Reproducible evaluation:** frozen candidate pools, resumable local LLM judging,
   ranking comparisons, and an export for human review.
 
-**Stack:** Python · PyTorch · Transformers · MCP · Starlette · n8n · Ollama · Tavily · uv
+**Stack:** Python · PyTorch · Transformers · React · TypeScript · Vite · MCP · Starlette · n8n · Groq · Ollama · Tavily · uv
 
 ## Model fine-tuning
 
@@ -53,6 +58,7 @@ queries. Live-web evaluation is reported separately below.
 
 ```mermaid
 flowchart LR
+    W[Web frontend] -->|HTTP| S[NSE service]
     N[n8n workflow] -->|HTTP or MCP| S[NSE service]
     A[Agent client] -->|MCP| S
     S --> T[Tavily web excerpts]
@@ -60,7 +66,9 @@ flowchart LR
     B --> C[BERT cross-encoder]
     C --> E[Ranked evidence]
     E --> R[Client or workflow]
-    R --> O[Optional local Qwen answer]
+    W --> G[Shared answer endpoint]
+    G --> Q[Groq GPT-OSS 20B]
+    G -->|Fallback| O[Local Qwen]
 ```
 
 The default pipeline requests **20 candidates**, reranks **up to 10**, and returns
@@ -70,10 +78,10 @@ the MCP tool.
 
 ## Demo output
 
-![Local Qwen answer to a semantic-search question, with source citations and explicit factual-verification status](docs/assets/cited-answer.png)
+![Live browser search with a cited Groq answer, ranked sources, and BERT stage timings](docs/assets/frontend-results.jpg)
 
-*The workflow returns the question, cited answer, model, and full ranked evidence.
-Citation IDs provide traceability; factual verification is explicitly not performed.*
+*An actual browser execution using Tavily, both local BERT models, and Groq.
+Citation IDs provide traceability; factual verification is not performed.*
 
 [Inspect the matching source, model scores, and native MCP execution →](docs/demo-gallery.md)
 
@@ -95,18 +103,27 @@ and answer generation. [Exact results and run provenance](evals/results/2026-09-
 
 ## Run locally
 
-Prerequisites: **uv**, internet access for live search and initial downloads,
-and **npm** for the supplied Windows n8n installer. Run the following commands
+Prerequisites: **uv**, **Node.js 22.12+ with npm**, and internet access for live
+search and initial downloads. Run the following commands
 from the repository root in PowerShell. uv selects Python 3.11 and CPU
 PyTorch. Ranking weights occupy roughly 0.9 GB on disk; this is not a RAM estimate.
 
 ```powershell
 uv sync --locked
 uv run python -m nse download-models  # First setup only
+npm --prefix frontend ci
+npm --prefix frontend run build
 uv run serve.py
 ```
 
-Wait for `Application startup complete`. In another terminal:
+Wait for `Application startup complete`, then open **http://127.0.0.1:8000**.
+Enter a question or choose an example. Turn **Cited answer** off for retrieval
+only. **Ranking details** shows each source's position through the pipeline.
+For Groq answers, configure `GROQ_API_KEY` in `.env`; see the section below.
+
+### Optional n8n interface
+
+With the service running, open another terminal:
 
 ```powershell
 ./n8n.ps1 Install  # First setup only
@@ -118,7 +135,7 @@ Open `http://localhost:5678`, complete local owner setup if prompted, and run
 **NSE - MCP ranked evidence**. Edit **Demo query** and inspect **Rank sources**.
 The service endpoint is `http://127.0.0.1:8000/mcp`; HTTP search is `POST /search`.
 Ollama is needed only for **NSE - cited local answer**, with `qwen3:4b` installed
-and its API running on port 11434.
+and its API running on port 11434, or for the shared answer endpoint's fallback.
 
 Tavily uses rate-limited keyless access by default. An optional `TAVILY_API_KEY`
 can be set in the ignored `.env` file. See [provider setup](docs/tavily.md).
@@ -132,16 +149,44 @@ MCP interface directly while the service is running:
 uv run mcp_demo.py "What is semantic search?"
 ```
 
+### Groq answers with local fallback
+
+Set `GROQ_API_KEY` in the ignored `.env` file, using [.env.dist](.env.dist) as the
+configuration reference, and restart the service. The default Groq model is
+`openai/gpt-oss-20b`; override it with `GROQ_MODEL`. For local fallback, run
+Ollama with `qwen3:4b` installed (or set `OLLAMA_MODEL`). No new Python SDK is needed.
+
+```powershell
+Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/answer `
+  -ContentType 'application/json' `
+  -Body '{"query":"What is semantic search?","top":5}'
+```
+
+This runs retrieval once, then attempts Groq and, if needed, Ollama using the same
+evidence. The response includes `answer_status`, `answer`, `provider`, `model`,
+`fallback_used`, safe failure codes in `attempts`, and the complete `evidence`.
+If both providers fail, HTTP 200 still returns the successful retrieval with
+`answer_status: "unavailable"` and `answer: null`. Clients must check that status.
+Empty search results return `no_sources` without calling either LLM.
+
+Groq receives the query and selected source excerpts through the backend; the key
+never belongs in browser code. The existing local-only n8n answer demo remains
+available. [Endpoint contract, fallback behavior, and validation](docs/answers.md).
+
 ## Validation and limits
 
 The [recorded validation](docs/prototype-validation.md) includes **36 passing
 Python checks** and successful executions of all three n8n workflows. Seven
 additional JavaScript regression tests exercise the answer workflow's request
-and validation code. Run the tests with:
+and validation code. With the shared answer endpoint, the suite now includes
+**51 passing Python tests and 9 passing JavaScript tests** (2026-10-10);
+[answer-layer validation](docs/answers.md#validation) uses mocked providers.
+Run the tests with:
 
 ```powershell
 uv run python -m unittest discover -s tests -v
 node --test tests/workflow-answer.test.cjs
+npm --prefix frontend test
 ```
 
 - Source IDs and citation checks provide traceability, not factual verification.
@@ -152,8 +197,10 @@ node --test tests/workflow-answer.test.cjs
 
 | Area | Entry point |
 | --- | --- |
+| Frontend and local development | [frontend/](frontend/), [website guide](docs/frontend.md) |
 | Ranking pipeline and model loading | [nse/search.py](nse/search.py), [nse/models.py](nse/models.py) |
 | MCP and HTTP service | [nse/service.py](nse/service.py) |
+| Groq/Ollama answers and fallback | [nse/answers.py](nse/answers.py), [answer API guide](docs/answers.md) |
 | Importable workflows | [workflows/](workflows/) |
 | Evaluation runner and protocol | [evals/README.md](evals/README.md) |
 | Dataset download utility | [scripts/download_training_data.py](scripts/download_training_data.py) |

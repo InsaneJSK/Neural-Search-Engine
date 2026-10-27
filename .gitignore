@@ -1,4 +1,7 @@
 # Byte-compiled / optimized / DLL files
+frontend/node_modules/
+frontend/dist/
+frontend/*.tsbuildinfo
 __pycache__/
 *.py[codz]
 *$py.class

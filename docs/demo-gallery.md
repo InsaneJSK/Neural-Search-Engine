@@ -1,8 +1,20 @@
 # Demo screenshots
 
-These are user-captured screenshots from the working local n8n prototype,
-provided on 21 September 2026. The original PNGs are preserved without image
-editing. They document recorded executions, not a public hosted demo.
+The frontend screenshots show the working local website on 10 October 2026.
+The n8n screenshots were provided by the author on 21 September 2026. Images
+document recorded local executions, not a public hosted demo.
+
+## Web frontend
+
+![NSE search workspace](assets/frontend-home.jpg)
+
+The web interface calls the same Python ranking pipeline as MCP and n8n.
+
+![Live Groq answer, ranked sources, and retrieval-stage timings](assets/frontend-results.jpg)
+
+This browser execution used live Tavily results, both trained BERT checkpoints,
+and Groq GPT-OSS 20B. Source citations navigate to matching result cards. Stage
+timings describe this execution only; they are not additional benchmark results.
 
 ## Successful workflow
 
