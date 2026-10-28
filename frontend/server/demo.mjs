@@ -12,13 +12,10 @@ async function boundedBody(request, limit = 16384) {
   return Buffer.concat(parts).toString('utf8');
 }
 
-export function createDemoHandler(env = process.env, upstreamFetch = fetch, clock = Date.now) {
+export function createDemoHandler(env = process.env, upstreamFetch = fetch) {
   return async function handle(request) {
-    const now = clock();
-    const cutoff = Date.parse(env.NSE_DEMO_EXPIRES_AT || '');
     const key = env.NSE_API_TOKEN;
-    if (!key || !Number.isFinite(cutoff)) return json({error:'Demo configuration is incomplete.'}, 503);
-    if (now >= cutoff) return json({error:'This demo has ended.'}, 410);
+    if (!key) return json({error:'Demo configuration is incomplete.'}, 503);
     const url = new URL(request.url);
     const path = url.searchParams.get('route') || url.pathname;
     const origin = request.headers.get('origin');

@@ -17,7 +17,7 @@ def main():
         raise SystemExit("First run npx vercel login and npx vercel link inside frontend/.")
     state = json.loads((ROOT / ".demo/host.json").read_text())
     config = dotenv_values(ROOT / ".env.demo")
-    values = {key: config[key] for key in ("NSE_API_TOKEN", "NSE_DEMO_EXPIRES_AT")}
+    values = {key: config[key] for key in ("NSE_API_TOKEN",)}
     values.update(NSE_BACKEND_URL=state["url"])
     command = [npx, "--yes", "vercel@65.5.0"]
     for name, value in values.items():

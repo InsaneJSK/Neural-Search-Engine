@@ -1,4 +1,4 @@
-# Temporary hybrid demo
+# On-demand hybrid demo
 
 The frontend is hosted at **https://neural-search-engine-grazic.vercel.app** in Vercel project
 `nse14/nse-demo`. The Python service and both trained BERT models run on the
@@ -71,21 +71,22 @@ recorded process IDs; never terminate unrelated Python or tunnel processes.
 
 Normal local use remains `uv run serve.py`; it does not load `.env.demo`.
 
-## November 1 cutoff and cleanup
+## Keep the link; run the backend on demand
 
-The current demo expires at **2026-11-01 23:59:59 Asia/Calcutta**. The backend
-and Vercel proxy independently reject requests after that time. The launcher
-also stops its child processes. A Codex cleanup is scheduled for November 1 at
-23:59 IST to stop the demo and remove only this project's Vercel deployments,
-while keeping the project settings, source, secrets, and cached models reusable.
-Scheduled cleanup requires Codex to be available; API expiry does not.
+There is no scheduled expiry or automatic deployment deletion. The previous
+November 1 cleanup has been canceled. Vercel keeps serving the frontend even
+when the PC is off; search, answers, and MCP will report the host unavailable.
 
-To rehost later, set a new timezone-aware `NSE_DEMO_EXPIRES_AT` in `.env.demo`,
-start the host and redeploy. Update or cancel any still-pending cleanup schedule
-before extending an active demo. Rotating the backend token before a new event
-is recommended. To remove a deployment manually, select only this project's
-deployment in Vercel, or use `npx vercel remove <deployment-url> --yes` from
-`frontend/`. Preserve the project if you want to reuse its public alias.
+Start `uv run scripts/demo_host.py`, wait for **Demo host ready**, then run
+`uv run scripts/deploy_demo.py` in a second terminal each time you want to demo.
+The tunnel address changes on restart; the public Vercel URL stays the same.
+Stop the foreground launcher with Ctrl+C, or create `.demo/stop` for the
+background launcher. The backend and tunnel stop, while the website stays up.
+There is no need to recreate the project or download the models again.
+
+The launcher clears any legacy backend expiry setting. No expiry value is
+required in `.env.demo` or Vercel. Hosting still follows the providers' plans and
+usage allowances; there are no AWS resources for this project.
 
 ## Limits
 
@@ -109,7 +110,7 @@ access. The current smoke test exercises public health, search, answer, and MCP
 without credentials, and checks that the direct tunnel still rejects anonymous
 requests. This is a functional smoke test, not a quality or performance benchmark.
 
-The proxy tests cover public access, cutoff enforcement, private backend-token
+The proxy tests cover public access, private backend-token
 requirements, cross-origin requests, request size limits, MCP metadata, and safe
 handling of unavailable upstream services. The existing Python tests retain
 coverage for the private backend gate and local mode.

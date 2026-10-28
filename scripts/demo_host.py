@@ -1,4 +1,4 @@
-"""Host the temporary demo: uv run scripts/demo_host.py (Ctrl+C to stop).
+"""Host the on-demand demo: uv run scripts/demo_host.py (Ctrl+C to stop).
 
 Secrets and runtime state stay in ignored .env.demo and .demo/ files.
 """
@@ -13,7 +13,6 @@ import socket
 import subprocess
 import sys
 import time
-from datetime import datetime
 from urllib.request import Request, urlopen
 
 from dotenv import dotenv_values
@@ -28,16 +27,12 @@ def config():
     path = ROOT / ".env.demo"
     if not path.exists():
         path.write_text("NSE_API_TOKEN=" + secrets.token_urlsafe(32) + "\n"
-                        "NSE_DEMO_EXPIRES_AT=2026-11-01T23:59:59+05:30\n"
                         "NSE_DEMO_PORT=8001\n", encoding="utf-8")
     values = dict(dotenv_values(path))
-    for key in ("NSE_API_TOKEN", "NSE_DEMO_EXPIRES_AT"):
+    for key in ("NSE_API_TOKEN",):
         if not values.get(key):
             raise RuntimeError(f"Missing {key} in .env.demo")
-    expiry = datetime.fromisoformat(values["NSE_DEMO_EXPIRES_AT"])
-    if expiry.tzinfo is None or expiry.timestamp() <= time.time():
-        raise RuntimeError("The demo has expired; set a future timezone-aware cutoff in .env.demo to rehost.")
-    return values, expiry.timestamp()
+    return values
 
 
 def cloudflared():
@@ -57,7 +52,7 @@ def cloudflared():
 
 def main():
     STATE.mkdir(exist_ok=True)
-    values, cutoff = config()
+    values = config()
     executable = cloudflared()
     port = int(values.get("NSE_DEMO_PORT", "8001"))
     with socket.socket() as probe:
@@ -66,6 +61,7 @@ def main():
         except OSError:
             raise RuntimeError(f"Port {port} is already in use. Stop the existing demo first.") from None
     env = {**os.environ, **{k: v for k, v in values.items() if v is not None}}
+    env["NSE_DEMO_EXPIRES_AT"] = ""  # Override any legacy cutoff inherited from the host.
     children = []
     flags = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
     state_file = STATE / "host.json"
@@ -109,10 +105,10 @@ def main():
             time.sleep(1)
         if not url:
             raise RuntimeError("No tunnel URL received; see .demo/tunnel.log")
-        state_file.write_text(json.dumps({"url": url, "port": port, "expires_at": values["NSE_DEMO_EXPIRES_AT"],
+        state_file.write_text(json.dumps({"url": url, "port": port, "expires_at": None,
                                          "host_pid": os.getpid(), "backend_pid": backend.pid, "tunnel_pid": tunnel.pid}, indent=2))
         print(f"Demo host ready: {url}\nRun the Vercel deployment script after each host restart.\nKeep this PC online. Ctrl+C or create .demo/stop to stop.", flush=True)
-        while time.time() < cutoff and not stop_file.exists():
+        while not stop_file.exists():
             if any(child.poll() is not None for child in children):
                 raise RuntimeError("A demo process stopped; restart the launcher and redeploy.")
             time.sleep(2)

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createDemoHandler} from '../server/demo.mjs';
 
-const env = {NSE_API_TOKEN:'backend-secret', NSE_DEMO_EXPIRES_AT:'2030-01-01T00:00:00Z', NSE_BACKEND_URL:'https://example.trycloudflare.com'};
+const env = {NSE_API_TOKEN:'backend-secret', NSE_BACKEND_URL:'https://example.trycloudflare.com'};
 const request = (path, options={}) => new Request(`https://demo.example${path}`, options);
 test('public requests reach the backend without a code or cookie', async () => {
   const handle=createDemoHandler(env, async () => Response.json({ok:true}));
@@ -13,10 +13,13 @@ test('public requests reach the backend without a code or cookie', async () => {
   }
   assert.equal((await handle(request('/demo-session'))).status,404);
 });
-test('cutoff and missing backend credentials still fail closed', async () => {
+test('missing backend credentials still fail closed', async () => {
   const never=() => {throw new Error('must not call');};
-  assert.equal((await createDemoHandler(env,never,()=>2000000000000)(request('/health'))).status,410);
   assert.equal((await createDemoHandler({...env,NSE_API_TOKEN:''},never)(request('/health'))).status,503);
+});
+test('legacy expiry does not disable the on-demand demo', async () => {
+  const handle=createDemoHandler({...env,NSE_DEMO_EXPIRES_AT:'2020-01-01T00:00:00Z'}, async () => Response.json({status:'ready'}));
+  assert.equal((await handle(request('/health'))).status,200);
 });
 test('proxy uses only fixed paths and the server secret, preserving MCP metadata', async () => {
   const handle=createDemoHandler(env, async (url, options) => {
