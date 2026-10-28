@@ -13,6 +13,9 @@ Groq with local Ollama fallback. Both ranking models stay loaded between request
 [Training and technical reference](TECHNICAL_REFERENCE.md) ·
 [Validation record](docs/prototype-validation.md)
 
+**Temporary hosted demo:** [Open NSE](https://neural-search-engine-jsk.vercel.app) (demo code required;
+host PC must be online). [Hosting, restart, and MCP access](docs/deployment.md).
+
 ![NSE frontend: search workspace with example questions and cited-answer controls](docs/assets/frontend-home.jpg)
 
 *The local web interface uses the same trained ranking pipeline as HTTP, MCP,
@@ -120,6 +123,34 @@ Wait for `Application startup complete`, then open **http://127.0.0.1:8000**.
 Enter a question or choose an example. Turn **Cited answer** off for retrieval
 only. **Ranking details** shows each source's position through the pipeline.
 For Groq answers, configure `GROQ_API_KEY` in `.env`; see the section below.
+
+### Restart the hosted demo after rebooting
+
+After the initial [hosting setup](docs/deployment.md), open PowerShell in the
+repository root and start the PC backend and tunnel:
+
+```powershell
+uv run scripts/demo_host.py
+```
+
+Leave that terminal open. Once it prints **Demo host ready**, open a second
+terminal in the same folder and run:
+
+```powershell
+uv run scripts/deploy_demo.py
+```
+
+Every host restart creates a new tunnel address, so the second command is
+required. The public URL stays **https://neural-search-engine-jsk.vercel.app**.
+Use the demo code in the ignored `.env.demo` file and keep the PC powered and
+online. Start Ollama separately if you want the local answer fallback; Groq
+does not require it. Normal local use still needs only `uv run serve.py`.
+
+The current hosted demo expires on **November 1, 2026, at 23:59:59 IST**, with
+cleanup scheduled for that evening. Before rehosting later, update
+`NSE_DEMO_EXPIRES_AT` in `.env.demo`; see the [cleanup and rehosting guide](docs/deployment.md#november-1-cutoff-and-cleanup).
+Vercel receives CLI uploads directly from the local frontend folder; GitHub
+auto-deployment is not connected.
 
 ### Optional n8n interface
 

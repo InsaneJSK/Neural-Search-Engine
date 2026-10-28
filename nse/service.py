@@ -3,6 +3,7 @@
 import argparse
 import json
 import logging
+import os
 import secrets
 import time
 from collections import OrderedDict
@@ -24,6 +25,7 @@ from starlette.staticfiles import StaticFiles
 
 from .artifacts import DEFAULT_MODELS_DIR, find_checkpoint
 from .answers import AnswerGenerator
+from .access import DemoAccessMiddleware
 from .providers import PROVIDERS, validate_provider_limit
 from .search import SearchPipeline, SearchUnavailable
 
@@ -51,7 +53,7 @@ class CachedAnswerRequest(BaseModel):
 
 
 def create_app(*, provider="tavily", models_dir=DEFAULT_MODELS_DIR, device="auto", pipeline_factory=None,
-               answer_factory=None, frontend_dir=None):
+               answer_factory=None, frontend_dir=None, api_token="", expires_at=None):
     """Factory injection lets transport tests run without weights or web access."""
     if provider not in PROVIDERS:
         raise ValueError("Unknown search provider")
@@ -197,7 +199,8 @@ def create_app(*, provider="tavily", models_dir=DEFAULT_MODELS_DIR, device="auto
                              Route("/", homepage), Route("/favicon.svg", favicon),
                              Mount("/assets", app=StaticFiles(directory=web_root / "assets", check_dir=False)),
                              Mount("/", app=mcp_app)], lifespan=lifespan,
-                     middleware=[Middleware(TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost", "[::1]", "testserver"])])
+                     middleware=[Middleware(TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost", "[::1]", "testserver"]),
+                                 Middleware(DemoAccessMiddleware, token=api_token, expires_at=expires_at)])
 
 
 class BusyError(RuntimeError):
@@ -210,11 +213,17 @@ class EvidenceExpired(RuntimeError):
 
 def main():
     import uvicorn
+    load_dotenv(Path(__file__).resolve().parents[1] / ".env")
     parser = argparse.ArgumentParser(description="Local NSE HTTP and MCP service")
     parser.add_argument("--port", type=int, default=8000)
+    parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--provider", choices=PROVIDERS, default="tavily")
     parser.add_argument("--models-dir", type=Path, default=DEFAULT_MODELS_DIR)
     parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
     args = parser.parse_args()
-    uvicorn.run(create_app(provider=args.provider, models_dir=args.models_dir, device=args.device),
-                host="127.0.0.1", port=args.port)
+    token = os.getenv("NSE_API_TOKEN", "")
+    if args.host not in {"127.0.0.1", "localhost", "::1"} and not token:
+        parser.error("A non-loopback bind requires NSE_API_TOKEN.")
+    uvicorn.run(create_app(provider=args.provider, models_dir=args.models_dir, device=args.device,
+                          api_token=token, expires_at=os.getenv("NSE_DEMO_EXPIRES_AT")),
+                host=args.host, port=args.port)

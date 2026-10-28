@@ -2,13 +2,16 @@
 import argparse
 import asyncio
 import json
+import os
+import httpx
 from datetime import timedelta
 from mcp import ClientSession
 from mcp.client.streamable_http import streamable_http_client
 
 
 async def run(url, query):
-    async with streamable_http_client(url) as (read, write, _):
+    token = os.getenv("NSE_MCP_TOKEN") or os.getenv("NSE_DEMO_CODE")
+    async with httpx.AsyncClient(headers={"Authorization": "Bearer " + token} if token else {}, timeout=240) as client, streamable_http_client(url, http_client=client) as (read, write, _):
         async with ClientSession(read, write, read_timeout_seconds=timedelta(seconds=180)) as session:
             await session.initialize()
             listed = await session.list_tools()

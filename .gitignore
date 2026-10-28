@@ -232,3 +232,5 @@ data/
 pytorch_model*.bin
 node_modules/
 .n8n/
+.demo/
+.vercel/
