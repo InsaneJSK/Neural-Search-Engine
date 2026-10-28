@@ -10,7 +10,7 @@ from mcp.client.streamable_http import streamable_http_client
 
 
 async def run(url, query):
-    token = os.getenv("NSE_MCP_TOKEN") or os.getenv("NSE_DEMO_CODE")
+    token = os.getenv("NSE_MCP_TOKEN")
     async with httpx.AsyncClient(headers={"Authorization": "Bearer " + token} if token else {}, timeout=240) as client, streamable_http_client(url, http_client=client) as (read, write, _):
         async with ClientSession(read, write, read_timeout_seconds=timedelta(seconds=180)) as session:
             await session.initialize()

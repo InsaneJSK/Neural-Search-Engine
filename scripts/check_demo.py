@@ -1,6 +1,6 @@
 """Live smoke test: uv run scripts/check_demo.py https://your-demo.vercel.app.
 
-Uses .env.demo without printing credentials. Performs two real searches.
+Checks public access without credentials. Performs two real searches.
 """
 import argparse
 import asyncio
@@ -8,7 +8,6 @@ from datetime import timedelta
 import json
 from pathlib import Path
 import httpx
-from dotenv import dotenv_values
 from mcp import ClientSession
 from mcp.client.streamable_http import streamable_http_client
 
@@ -16,15 +15,10 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 async def main(url):
-    config = dotenv_values(ROOT / ".env.demo")
     async with httpx.AsyncClient(timeout=240) as client:
         response = await client.get(url + "/health")
-        assert response.status_code == 401, f"Public API not gated: {response.status_code}"
-        login = await client.post(url + "/demo-session", json={"code": config["NSE_DEMO_CODE"]}, headers={"Origin": url})
-        login.raise_for_status()
-        response = await client.get(url + "/health")
         response.raise_for_status()
-        print("Authenticated health:", response.json(), flush=True)
+        print("Public health:", response.json(), flush=True)
         response = await client.post(url + "/search", json={"query":"What is semantic search, and how does it differ from keyword search?", "max_results":10, "rerank":5, "top":3})
         response.raise_for_status()
         evidence = response.json()
@@ -36,7 +30,7 @@ async def main(url):
         print("Answer:", answer["answer_status"], "via", answer.get("provider"), flush=True)
         assert answer["answer_status"] == "available"
         (ROOT / ".demo/last-check.json").write_text(json.dumps({"evidence":evidence,"answer":answer},indent=2),encoding="utf-8")
-    async with httpx.AsyncClient(headers={"Authorization":"Bearer " + config["NSE_DEMO_CODE"]},timeout=240) as client:
+    async with httpx.AsyncClient(timeout=240) as client:
         async with streamable_http_client(url + "/mcp", http_client=client) as (read,write,_):
             async with ClientSession(read,write,read_timeout_seconds=timedelta(seconds=240)) as session:
                 await session.initialize()

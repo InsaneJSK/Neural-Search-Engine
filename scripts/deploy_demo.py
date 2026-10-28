@@ -17,12 +17,12 @@ def main():
         raise SystemExit("First run npx vercel login and npx vercel link inside frontend/.")
     state = json.loads((ROOT / ".demo/host.json").read_text())
     config = dotenv_values(ROOT / ".env.demo")
-    values = {key: config[key] for key in ("NSE_API_TOKEN", "NSE_DEMO_CODE", "NSE_DEMO_EXPIRES_AT")}
-    values.update(NSE_BACKEND_URL=state["url"], VITE_DEMO_GATE="1")
+    values = {key: config[key] for key in ("NSE_API_TOKEN", "NSE_DEMO_EXPIRES_AT")}
+    values.update(NSE_BACKEND_URL=state["url"])
     command = [npx, "--yes", "vercel@65.5.0"]
     for name, value in values.items():
         result = subprocess.run(command + ["env", "add", name, "--environment", "production", "--force", "--yes",
-                                          "--sensitive" if name in {"NSE_API_TOKEN", "NSE_DEMO_CODE"} else "--no-sensitive"],
+                                          "--sensitive" if name == "NSE_API_TOKEN" else "--no-sensitive"],
                                 input=value, text=True, cwd=ROOT / "frontend", capture_output=True)
         if result.returncode:
             # Do not print command output, which could include the supplied secret.

@@ -28,11 +28,10 @@ def config():
     path = ROOT / ".env.demo"
     if not path.exists():
         path.write_text("NSE_API_TOKEN=" + secrets.token_urlsafe(32) + "\n"
-                        "NSE_DEMO_CODE=" + secrets.token_urlsafe(12) + "\n"
                         "NSE_DEMO_EXPIRES_AT=2026-11-01T23:59:59+05:30\n"
                         "NSE_DEMO_PORT=8001\n", encoding="utf-8")
     values = dict(dotenv_values(path))
-    for key in ("NSE_API_TOKEN", "NSE_DEMO_CODE", "NSE_DEMO_EXPIRES_AT"):
+    for key in ("NSE_API_TOKEN", "NSE_DEMO_EXPIRES_AT"):
         if not values.get(key):
             raise RuntimeError(f"Missing {key} in .env.demo")
     expiry = datetime.fromisoformat(values["NSE_DEMO_EXPIRES_AT"])

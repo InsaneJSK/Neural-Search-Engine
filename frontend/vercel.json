@@ -5,7 +5,6 @@
   "outputDirectory": "dist",
   "functions": {"api/demo.mjs": {"maxDuration": 300}},
   "rewrites": [
-    {"source":"/demo-session", "destination":"/api/demo?route=/demo-session"},
     {"source":"/health", "destination":"/api/demo?route=/health"},
     {"source":"/search", "destination":"/api/demo?route=/search"},
     {"source":"/answer", "destination":"/api/demo?route=/answer"},

@@ -5,7 +5,6 @@ import { ArrowUpRight, ArrowRight, Search, Plus, Github, Layers3, Compass, Clock
   LoaderCircle, CircleAlert, ExternalLink } from 'lucide-react';
 import { answerParts, domain, safeUrl, seconds } from './utils.mjs';
 import './styles.css';
-import { DemoGate } from './DemoGate';
 
 type Source = {source_id: string; title: string; url: string; snippet: string; rank: number;
   search_rank: number; dense_rank: number; bi_score: number; cross_score: number};
@@ -193,4 +192,4 @@ function Excerpt({text}: {text: string}) {
   return <><p className={`source-snippet ${long && !expanded ? 'clamped' : ''}`}>{text}</p>{long && <button className="excerpt-toggle" aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>{expanded ? 'Show less' : 'Read full excerpt'}</button>}</>;
 }
 
-createRoot(document.getElementById('root')!).render(<React.StrictMode>{import.meta.env.VITE_DEMO_GATE === '1' ? <DemoGate><App/></DemoGate> : <App/>}</React.StrictMode>);
+createRoot(document.getElementById('root')!).render(<React.StrictMode><App/></React.StrictMode>);

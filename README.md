@@ -13,7 +13,7 @@ Groq with local Ollama fallback. Both ranking models stay loaded between request
 [Training and technical reference](TECHNICAL_REFERENCE.md) ·
 [Validation record](docs/prototype-validation.md)
 
-**Temporary hosted demo:** [Open NSE](https://neural-search-engine-grazic.vercel.app) (demo code required;
+**Temporary hosted demo:** [Open NSE](https://neural-search-engine-grazic.vercel.app) (no sign-in required;
 host PC must be online). [Hosting, restart, and MCP access](docs/deployment.md).
 
 ![NSE frontend: search workspace with example questions and cited-answer controls](docs/assets/frontend-home.jpg)
@@ -142,8 +142,7 @@ uv run scripts/deploy_demo.py
 
 Every host restart creates a new tunnel address, so the second command is
 required. The public URL stays **https://neural-search-engine-grazic.vercel.app**.
-Use the demo code in the ignored `.env.demo` file and keep the PC powered and
-online. Start Ollama separately if you want the local answer fallback; Groq
+Reviewers can open the link directly. Keep the PC powered and online. Start Ollama separately if you want the local answer fallback; Groq
 does not require it. Normal local use still needs only `uv run serve.py`.
 
 The current hosted demo expires on **November 1, 2026, at 23:59:59 IST**, with
