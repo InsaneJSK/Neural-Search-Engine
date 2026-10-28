@@ -1,6 +1,6 @@
 # Temporary hybrid demo
 
-The frontend is hosted at **https://neural-search-engine-jsk.vercel.app** in Vercel project
+The frontend is hosted at **https://neural-search-engine-grazic.vercel.app** in Vercel project
 `nse14/nse-demo`. The Python service and both trained BERT models run on the
 presenter's Windows PC. A Cloudflare Quick Tunnel connects them. Groq generates
 answers with local Ollama fallback. This is live inference, not recorded output.
@@ -26,7 +26,7 @@ file privately. The browser receives an eight-hour HttpOnly session cookie,
 limited by the deployment cutoff. API and MCP clients send that same demo code
 as `Authorization: Bearer <demo-code>`.
 
-MCP endpoint: `https://neural-search-engine-jsk.vercel.app/mcp`. In n8n's MCP Client node, use
+MCP endpoint: `https://neural-search-engine-grazic.vercel.app/mcp`. In n8n's MCP Client node, use
 Streamable HTTP and a header authentication credential with that Authorization
 header. The n8n editor itself stays local. The remote MCP interface returns ranked
 evidence; the frontend's separate `/answer` endpoint handles generation.
@@ -34,7 +34,7 @@ evidence; the frontend's separate `/answer` endpoint handles generation.
 From the host repo, test the MCP client without putting secrets in arguments:
 
 ```powershell
-uv run --env-file .env.demo mcp_demo.py --url https://neural-search-engine-jsk.vercel.app/mcp
+uv run --env-file .env.demo mcp_demo.py --url https://neural-search-engine-grazic.vercel.app/mcp
 ```
 
 The tunnel uses a different `NSE_API_TOKEN`, known only to the backend and the
@@ -59,7 +59,7 @@ checkpoints, provider keys, and Node.js). These scripts target Windows x64.
 3. In a second terminal, run `uv run scripts/deploy_demo.py`. It uploads server
    environment variables through stdin and deploys only the `frontend/` folder.
 4. Open the URL printed by Vercel and enter the demo code. Optional live test:
-   `uv run scripts/check_demo.py https://neural-search-engine-jsk.vercel.app`.
+   `uv run scripts/check_demo.py https://neural-search-engine-grazic.vercel.app`.
 
 **Every host restart gets a new tunnel address. Run the deployment script again.**
 The public Vercel alias remains stable. `.demo/host.json` records the current
